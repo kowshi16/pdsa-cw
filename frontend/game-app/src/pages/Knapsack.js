@@ -4,7 +4,7 @@ import { Box, styled, Typography, Button } from "@mui/material";
 
 const ProductCard = styled(Box)(({ theme }) => ({
   backgroundColor: "#FFFFFF",
-  minWidth: "540px",
+  minWidth: "440px",
   padding: "32px",
   display: "flex",
   justifyContent: "space-between",
