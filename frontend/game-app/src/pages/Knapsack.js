@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../components/layouts/Sidebar";
 import { Box, styled, Typography, Button } from "@mui/material";
 import Swal from "sweetalert2";
 import productDataStore from "../lib/productData";
+import { getWeights,getProfits, knapsackProblem } from "../components/api/knapsackAPI";
+import Loading from "../components/core/Loading";
 
 const ProductCard = styled(Box)(({ theme }) => ({
   backgroundColor: "#FFFFFF",
@@ -25,6 +27,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 const TypographyStyled = styled(Typography)(({ theme }) => ({
   fontFamily: "'Open Sans', sans-serif",
   fontWeight: "600",
+  textTransform: "capitalize"
 }));
 
 const CardProductCard = styled(Box)(({ theme }) => ({
@@ -42,42 +45,42 @@ const CardProductCard = styled(Box)(({ theme }) => ({
 const ProductData = [
   {
     id: "P001",
-    name: "Sugar",
-    img: "https://cdn.shopify.com/s/files/1/2671/1426/products/Social_Instagram_Stories-NewPackagingProductImages_876x876.jpg?v=1662581871",
-    price: 520,
-    kg: 1,
+    name: "sugar",
+    img: "https://objectstorage.ap-mumbai-1.oraclecloud.com/n/softlogicbicloud/b/cdn/o/products/117191--1--1595325882.jpeg",
+    price: 0,
+    kg: 0,
     active: true,
   },
   {
     id: "P002",
-    name: "Flour",
-    img: "https://cdn.shopify.com/s/files/1/2671/1426/products/Wijaya-Atta-Flour-1kg_876x876.jpg?v=1598195295",
-    price: 600,
-    kg: 1,
+    name: "milk",
+    img: "https://objectstorage.ap-mumbai-1.oraclecloud.com/n/softlogicbicloud/b/cdn/o/products/100219--01--1549602154.jpeg",
+    price: 0,
+    kg: 0,
     active: true,
   },
   {
     id: "P003",
-    name: "Kurakkan Flour",
+    name: "flour",
     img: "https://cdn.shopify.com/s/files/1/2671/1426/products/Wijaya-Kurakkan-Flour_800x800.jpg?v=1558093982",
-    price: 800,
-    kg: 1,
+    price: 0,
+    kg: 0,
     active: true,
   },
   {
     id: "P004",
-    name: "Rice",
-    img: "https://cdn.shopify.com/s/files/1/2671/1426/products/Niru-Roasted-Red-Rice-Flour-1kg_800x800.jpg?v=1556370048",
-    price: 500,
-    kg: 1,
+    name: "rice",
+    img: "https://objectstorage.ap-mumbai-1.oraclecloud.com/n/softlogicbicloud/b/cdn/o/products/113857--1--1559751980.jpeg",
+    price: 0,
+    kg: 0,
     active: true,
   },
   {
     id: "P005",
-    name: "String Hopper Flour",
-    img: "https://cdn.shopify.com/s/files/1/2671/1426/products/MDK-String-Hopper-Flour-_Red_-700g_800x800.jpg?v=1520877001",
-    price: 700,
-    kg: 1,
+    name: "fruits",
+    img: "https://www.dole.com/-/media/project/dole/produce-images/headers/dole-produce-fruit-medley.png?rev=1416123f2d094cd1b7494365948214be&hash=F89C9786C9A5F599A784D7753F82236C",
+    price: 0,
+    kg: 0,
     active: true,
   },
 ];
@@ -85,10 +88,56 @@ const ProductData = [
 const Knapsack = () => {
   const [products, setProducts] = React.useState(ProductData);
   const [cardProducts, setCardProducts] = React.useState([]);
+  const [isLoading, setisLoading] = React.useState(true);
   const [totalData, setTotalData] = React.useState({
     totalPrice: 0,
     totalWeight: 0,
   });
+  const playerName = window.localStorage.getItem("Name");
+  const weightItem = [];
+  let profitItem = [];
+
+  console.log("products >>>>>>",products);
+
+  useEffect(() => {
+   const getWeight = async( ) => {
+    let latestProductsData = [];
+    getWeights().then((res) => {
+      const weightData = res.data;
+        for(var i in weightData){
+          products.filter((data) => {
+            if(data.name === i) {
+                data.kg = weightData[i];
+                latestProductsData.push(data);
+            }
+          })
+        }
+        setProducts(latestProductsData);
+    });
+   }
+
+   const getPrice = async() => {
+    let latestProductsData = [];
+    getProfits().then((res) => {
+      const weightData = res.data;
+        for(var i in weightData){
+          products.filter((data) => {
+            if(data.name === i) {
+                data.price = weightData[i];
+                latestProductsData.push(data);
+            }
+          })
+        }
+        setProducts(latestProductsData);
+        setisLoading(false);
+    });
+   }
+
+   getWeight();
+   getPrice();
+
+   return () => clearInterval(getWeight);
+  }, [isLoading]);
 
   const handleAddToCard = (id) => {
     let price = 0;
@@ -102,6 +151,15 @@ const Knapsack = () => {
       }
       return product.id === id;
     });
+    if(totalData.totalWeight + kg > 10){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Maximum 10kgs!',
+      });
+
+      return ;
+  }
     setCardProducts([...cardProducts, selectProduct[0]]);
 
     const latestPrice = totalData.totalPrice + price;
@@ -141,7 +199,69 @@ const Knapsack = () => {
     });
   };
 
-  return (
+  const handleSubmit = () => {
+    products.map((product) => {
+      weightItem.push(product.kg);
+      profitItem.push(product.price);
+     });
+    console.log("weight items >>>>>>>>>", weightItem);
+    console.log("profit items >>>>>>>>>", profitItem);
+
+    const payload = {
+      weightItems: weightItem,
+      profitItems: profitItem,
+      userTotalProfit: totalData.totalPrice,
+      name: playerName
+    };
+    console.log("payload >>>>>>>>>", payload);
+    knapsackProblem(payload)
+      .then((res) => {
+        res.data === "Congratulations! Your answer is correct!" ? (
+          Swal.fire({
+            title: "Successful",
+            text: res.data,
+            icon: "success",
+          }).then(function () {
+            window.location.reload();
+          })
+        ) : (
+          Swal.fire({
+            title: "Incorrect",
+            text: res.data,
+            icon: "error",
+          })
+        )
+        console.log(res.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Something went wrong",
+          text: "Sorry an error occurred. Please try again.",
+          icon: "warning",
+        });
+        console.log(error);
+      });  
+  };
+ 
+  const handleReset = () => {
+      Swal.fire({
+        title: "Reset",
+        text: "Successfully reset",
+        icon: "success",
+      }).then(function () {
+        window.location.reload();
+      });
+      setCardProducts([]);
+      setProducts(productDataStore);
+      totalData({
+        totalPrice: 0,
+        totalWeight: 0,
+      });
+    };
+  
+
+  return (<>
+  <Loading status={isLoading} />
     <Sidebar>
       <h1>Maximum profit for 0/1 Knapsack Problem</h1>
       <Box display="flex" flex-wrap>
@@ -275,13 +395,7 @@ const Knapsack = () => {
                         marginTop: "24px",
                         minWidth: "140px",
                       }}
-                      onClick={() => {
-                        Swal.fire({
-                          title: "Submit",
-                          text: "Successfully submitted",
-                          icon: "success",
-                        });
-                      }}
+                      onClick={handleSubmit}
                     >
                       Submit
                     </button>
@@ -289,19 +403,7 @@ const Knapsack = () => {
                     <button
                       className="btn"
                       style={{ marginTop: "24px", minWidth: "140px" }}
-                      onClick={() => {
-                        Swal.fire({
-                          title: "Reset",
-                          text: "Successfully reset",
-                          icon: "success",
-                        });
-                        setCardProducts([]);
-                        setProducts(productDataStore);
-                        totalData({
-                          totalPrice: 0,
-                          totalWeight: 0,
-                        });
-                      }}
+                      onClick={handleReset}
                     >
                       reset
                     </button>
@@ -313,6 +415,7 @@ const Knapsack = () => {
         </Box>
       </Box>
     </Sidebar>
+    </>
   );
 };
 

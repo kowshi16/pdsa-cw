@@ -2,7 +2,7 @@ import React from "react";
 import Sidebar from "../components/layouts/Sidebar";
 import { Box, Typography, styled } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import ShortestImg from "../assets/img/shoetest_path.jpeg";
+import ShortestPathImg from "../assets/img/shortest-path.png";
 import Swal from "sweetalert2";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
@@ -21,7 +21,7 @@ const ShortestPath = () => {
       <h1 style={{ textTransform: "uppercase" }}>Identify Shortest Path</h1>
       <Box display="flex">
         <BoxWindow>
-          <img src={ShortestImg} alt="" style={{ width: "100%" }} />
+          <img src={ShortestPathImg} alt="" style={{ width: "100%" }} />
         </BoxWindow>
         <Box ml="36px" mt="48px">
           <table className="table_minium">

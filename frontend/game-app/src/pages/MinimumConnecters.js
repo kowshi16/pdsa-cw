@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../components/layouts/Sidebar";
 import { Box, styled } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import DynamicTextFields from "../components/DynamicTextFields";
 import Swal from "sweetalert2";
-import MinimumImg from "../assets/img/minium.jpeg";
+import MinimumConnectorImg from "../assets/img/minimum-connector.jpg";
+import { getDistances } from "../components/api/minimumConnectorAPI";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -17,6 +18,17 @@ const BoxWindow = styled(Box)(({ theme }) => ({
 }));
 
 const MinimumConnecters = () => {
+  const [distance, setDistance] = React.useState();
+
+  useEffect(() => {
+    getDistances()
+      .then((res) => setDistance(res.data))
+      .catch((e) => console.log(e));
+  }, []);
+
+  console.log("distances >>>>>>>", distance);
+
+
   return (
     <Sidebar>
       <h1 style={{ textTransform: "uppercase" }}>
@@ -24,97 +36,84 @@ const MinimumConnecters = () => {
       </h1>
       <Box display="flex">
         <BoxWindow>
-          <img src={MinimumImg} alt="" style={{ width: "100%" }} />
+          <img src={MinimumConnectorImg} alt="" style={{ width: "100%" }} />
         </BoxWindow>
         <Box ml="36px" mt="48px">
           <table className="table_minium">
             <tr>
-              <th>From</th>
-              <th>To</th>
+              <th>From City</th>
+              <th>To City</th>
               <th>Distance</th>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="9"
-                  variant="standard"
-                />
+                A
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                B
               </td>
               <td>0</td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="9"
-                  variant="standard"
-                />
+                A
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                D
               </td>
               <td>0</td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="9"
-                  variant="standard"
-                />
+                A
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                E
               </td>
               <td>0</td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="9"
-                  variant="standard"
-                />
+                B
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                C
               </td>
               <td>0</td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="9"
-                  variant="standard"
-                />
+                C
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                G
+              </td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>
+                D
+              </td>
+              <td>
+                F
+              </td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>
+                E
+              </td>
+              <td>
+                G
+              </td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>
+                F
+              </td>
+              <td>
+                G
               </td>
               <td>0</td>
             </tr>

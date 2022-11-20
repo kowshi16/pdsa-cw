@@ -2,6 +2,8 @@ import React from "react";
 import { Box, styled } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import { createNewUser } from "../components/api/userAPI";
+import Swal from "sweetalert2";
 
 const CenterContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -28,7 +30,43 @@ const Card = styled(Box)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
+  const [params, setParams] = React.useState({
+		name: "",
+	});
+
+  const handleSubmit = () => {
+    console.log("params >>>>>>", params);
+    if(params.name === ""){
+      Swal.fire({
+        title: "Forgot to enter your name",
+        text: "Please enter your name!",
+        icon: "warning",
+      });
+    }
+    else {
+      createNewUser(params)
+    .then((res) => {
+      Swal.fire({
+        title: "Successful",
+        text: "Welcome! Now you can start playing!",
+        icon: "success",
+      });
+      console.log(res);
+      window.localStorage.setItem("Name",params.name);
+      navigate("/knapsack");
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Something went wrong",
+        text: "Sorry! An issue occurred while registering. Please try again.",
+        icon: "warning",
+      });
+      console.log(error);
+    });
+    }
+  };
+  
   return (
     <CenterContainer>
       <Card>
@@ -39,12 +77,16 @@ const Home = () => {
           id="outlined-basic"
           placeholder="Name"
           variant="outlined"
+          onChange={(event) => {
+            setParams({...params, name: event.target.value});
+          }}
         />
         <br /> <br />
         <button
           className="btn"
           style={{ marginTop: "24px" }}
-          onClick={() => navigate("/knapsack")}
+          //onClick={() => navigate("/knapsack")}
+          onClick={handleSubmit}
         >
           Submit
         </button>
