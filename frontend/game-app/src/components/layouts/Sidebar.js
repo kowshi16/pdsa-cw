@@ -75,6 +75,11 @@ const Sidebar = ({ children }) => {
               </ListItemButton>
             </ListItem>
           ))}
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/")}>
+              <ListItemTextStyled>Logout</ListItemTextStyled>
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Box
