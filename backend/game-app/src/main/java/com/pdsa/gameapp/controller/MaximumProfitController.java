@@ -58,18 +58,18 @@ public class MaximumProfitController {
 			int min = 5;
 			int max = 10;
 			
-			int randomWeightSugar = (int)Math.floor(Math.random()*(max-min+1)+min);
-			int randomWeightMilk = (int)Math.floor(Math.random()*(max-min+1)+min);
-			int randomWeightRice = (int)Math.floor(Math.random()*(max-min+1)+min);
-			int randomWeightFlour = (int)Math.floor(Math.random()*(max-min+1)+min);
-			int randomWeightFruits = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int randomProfitSugar = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int randomProfitMilk = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int randomProfitRice = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int randomProfitFlour = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int randomProfitFruits = (int)Math.floor(Math.random()*(max-min+1)+min);
 			
 			MaximumProfitDto maximumProfitDto = new MaximumProfitDto();
-			maximumProfitDto.setSugar(randomWeightSugar);
-			maximumProfitDto.setMilk(randomWeightMilk);
-			maximumProfitDto.setRice(randomWeightRice);
-			maximumProfitDto.setFlour(randomWeightFlour);
-			maximumProfitDto.setFruits(randomWeightFruits);
+			maximumProfitDto.setSugar(randomProfitSugar);
+			maximumProfitDto.setMilk(randomProfitMilk);
+			maximumProfitDto.setRice(randomProfitRice);
+			maximumProfitDto.setFlour(randomProfitFlour);
+			maximumProfitDto.setFruits(randomProfitFruits);
 			
 			return maximumProfitDto;
 		}
