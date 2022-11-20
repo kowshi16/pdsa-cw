@@ -7,6 +7,7 @@ public class KnapsackRequestBody {
 	int weightItems[];
 	int profitItems[];
 	int userTotalProfit;
+	String name;
 	
 	public int[] getWeightItems() {
 		return weightItems;
@@ -30,6 +31,14 @@ public class KnapsackRequestBody {
 	
 	public void setUserTotalProfit(int userTotalProfit) {
 		this.userTotalProfit = userTotalProfit;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

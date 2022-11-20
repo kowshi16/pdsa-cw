@@ -23,8 +23,9 @@ public class MinimumConnectorController {
 			int max = 100;
 			
 			int disAtoB = (int)Math.floor(Math.random()*(max-min+1)+min);
-			int disAtoE = (int)Math.floor(Math.random()*(max-min+1)+min);
 			int disAtoD = (int)Math.floor(Math.random()*(max-min+1)+min);
+			int disAtoE = (int)Math.floor(Math.random()*(max-min+1)+min);
+			
 			int disBtoC = (int)Math.floor(Math.random()*(max-min+1)+min);
 			int disCtoG = (int)Math.floor(Math.random()*(max-min+1)+min);
 			int disDtoF = (int)Math.floor(Math.random()*(max-min+1)+min);
@@ -33,8 +34,8 @@ public class MinimumConnectorController {
 			
 			MinimumConnectorDto minimumConnectorDto = new MinimumConnectorDto();
 			minimumConnectorDto.setAtoB(disAtoB);
+			minimumConnectorDto.setAtoD(disAtoD);
 			minimumConnectorDto.setAtoE(disAtoE);
-			minimumConnectorDto.setAtoE(disAtoD);
 			minimumConnectorDto.setBtoC(disBtoC);
 			minimumConnectorDto.setCtoG(disCtoG);
 			minimumConnectorDto.setDtoF(disDtoF);

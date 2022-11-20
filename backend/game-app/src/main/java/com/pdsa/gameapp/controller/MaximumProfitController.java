@@ -117,7 +117,7 @@ public class MaximumProfitController {
 	        
 	        if(knapsackRequestBody.getUserTotalProfit() == totalProfit) {
 	        	MaximumProfitKnapsack maximumProfitKnapsack = new MaximumProfitKnapsack();
-	        	maximumProfitKnapsack.setName("Kasun");
+	        	maximumProfitKnapsack.setName(knapsackRequestBody.getName());
 	        	maximumProfitKnapsack.setTotalProfit(knapsackRequestBody.getUserTotalProfit());
 	        	maximumProfitRepository.save(maximumProfitKnapsack);
 	        	
