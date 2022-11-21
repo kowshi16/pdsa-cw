@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../components/layouts/Sidebar";
 import { Box, Typography, styled } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import ShortestPathImg from "../assets/img/shortest-path.png";
 import Swal from "sweetalert2";
+import { getDistances } from "../components/api/shortestPathAPI";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -16,6 +17,20 @@ const BoxWindow = styled(Box)(({ theme }) => ({
 }));
 
 const ShortestPath = () => {
+  const [distance, setDistance] = React.useState(null);
+
+  useEffect(() => {
+    const getDistance = async () => {
+      getDistances().then((res) => {
+        setDistance(res.data);
+      });
+    }
+    
+    getDistance();
+  }, []);
+
+  console.log("distance >>>>>>>", distance);
+
   return (
     <Sidebar>
       <h1 style={{ textTransform: "uppercase" }}>Identify Shortest Path</h1>
@@ -26,107 +41,100 @@ const ShortestPath = () => {
         <Box ml="36px" mt="48px">
           <table className="table_minium">
             <tr>
-              <th>From city</th>
-              <th>To city</th>
+              <th>From City</th>
+              <th>To City</th>
               <th>Distance</th>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                0
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                1
               </td>
               <td>
-                <TextField id="standard-basic" variant="standard" />
+              {distance ? distance["zeroToOne"] : 0}
               </td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                1
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                2
               </td>
               <td>
-                <TextField id="standard-basic" variant="standard" />
+                {distance ? distance["oneToTwo"] : 0}
               </td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                2
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                3
               </td>
               <td>
-                <TextField id="standard-basic" variant="standard" />
+                {distance ? distance["twoToThree"] : 0}
               </td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                3
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                4
               </td>
               <td>
-                <TextField id="standard-basic" variant="standard" />
+                {distance ? distance["threeToFour"] : 0}
               </td>
             </tr>
             <tr>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                3
               </td>
               <td>
-                <TextField
-                  id="standard-basic"
-                  placeholder="0"
-                  variant="standard"
-                />
+                5
               </td>
               <td>
-                <TextField id="standard-basic" variant="standard" />
+                {distance ? distance["threeToFive"] : 0}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                4
+              </td>
+              <td>
+                6
+              </td>
+              <td>
+                {distance ? distance["fourToSix"] : 0}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                5
+              </td>
+              <td>
+                6
+              </td>
+              <td>
+                {distance ? distance["fiveToSix"] : 0}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                6
+              </td>
+              <td>
+                0
+              </td>
+              <td>
+                {distance ? distance["sixToZero"] : 0}
               </td>
             </tr>
           </table>
-          <h3>Predict shortest distance from city 6 to following cities</h3>
+          <h3>Predict shortest distance from city 0 to city 6</h3>
           <Box display="flex" alignItems="center">
             <Typography>1</Typography>
             <TextField
@@ -135,7 +143,7 @@ const ShortestPath = () => {
               placeholder="0,0,0,0,0"
               sx={{ margin: "0px 22px" }}
             />
-            <Typography>1</Typography>
+            <Typography>6</Typography>
           </Box>
         </Box>
       </Box>
@@ -165,7 +173,7 @@ const ShortestPath = () => {
               });
             }}
           >
-            reset
+            Reset
           </button>
         </Box>
       </Box>

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import Sidebar from "../components/layouts/Sidebar";
-import { Box, styled } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import DynamicTextFields from "../components/DynamicTextFields";
 import Swal from "sweetalert2";
 import MinimumConnectorImg from "../assets/img/minimum-connector.jpg";
 import { getDistances } from "../components/api/minimumConnectorAPI";
+import Loading from "../components/core/Loading";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -18,18 +19,45 @@ const BoxWindow = styled(Box)(({ theme }) => ({
 }));
 
 const MinimumConnecters = () => {
-  const [distance, setDistance] = React.useState();
+  const [distance, setDistance] = React.useState(null);
+  const [isLoading, setisLoading] = React.useState(true);
+  let edgeWeightItems = [];
 
   useEffect(() => {
-    getDistances()
-      .then((res) => setDistance(res.data))
-      .catch((e) => console.log(e));
+    const getDistance = async () => {
+      getDistances().then((res) => {
+        setDistance(res.data);
+      });
+
+      setisLoading(false);
+    }
+    
+    getDistance();
   }, []);
 
-  console.log("distances >>>>>>>", distance);
+  const graphItems = [
+    [0, distance ? distance["atoB"] : 0, distance ? distance["atoD"] : 0, 0, distance ? distance["atoE"] : 0, 0, 0],
+    [distance ? distance["atoB"] : 0, distance ? distance["btoC"] : 0, 0, 0, 0, 0, 0],
+    [0, distance ? distance["btoC"] : 0, 0, 0, 0, 0, distance ? distance["ctoG"] : 0],
+    [distance ? distance["atoD"] : 0, 0, 0, 0, 0, distance ? distance["dtoF"] : 0, 0],
+    [distance ? distance["atoE"] : 0, 0, 0, 0, 0, 0, distance ? distance["etoG"] : 0],
+    [0, 0, 0, distance ? distance["dtoF"] : 0, 0, 0, distance ? distance["ftoG"] : 0],
+    [0, 0, distance ? distance["ctoG"] : 0, 0, distance ? distance["etoG"] : 0, distance ? distance["ftoG"] : 0, 0],
+  ];
 
+  console.log("distance >>>>>>>", distance);
 
-  return (
+  console.log("graph >>>>", graphItems);
+
+  const handleSubmit = () => {
+    // const payload = {
+    //   graph: graphItems,
+    //   edgeWeight
+    // }
+  };
+
+  return (<>
+  <Loading status={isLoading} />
     <Sidebar>
       <h1 style={{ textTransform: "uppercase" }}>
         Identify minimum connecters
@@ -52,7 +80,7 @@ const MinimumConnecters = () => {
               <td>
                 B
               </td>
-              <td>0</td>
+              <td>{distance ? distance["atoB"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -61,7 +89,7 @@ const MinimumConnecters = () => {
               <td>
                 D
               </td>
-              <td>0</td>
+              <td>{distance ? distance["atoD"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -70,7 +98,7 @@ const MinimumConnecters = () => {
               <td>
                 E
               </td>
-              <td>0</td>
+              <td>{distance ? distance["atoE"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -79,7 +107,7 @@ const MinimumConnecters = () => {
               <td>
                 C
               </td>
-              <td>0</td>
+              <td>{distance ? distance["btoC"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -88,7 +116,7 @@ const MinimumConnecters = () => {
               <td>
                 G
               </td>
-              <td>0</td>
+              <td>{distance ? distance["ctoG"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -97,7 +125,7 @@ const MinimumConnecters = () => {
               <td>
                 F
               </td>
-              <td>0</td>
+              <td>{distance ? distance["dtoF"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -106,7 +134,7 @@ const MinimumConnecters = () => {
               <td>
                 G
               </td>
-              <td>0</td>
+              <td>{distance ? distance["etoG"] : 0}</td>
             </tr>
             <tr>
               <td>
@@ -115,12 +143,16 @@ const MinimumConnecters = () => {
               <td>
                 G
               </td>
-              <td>0</td>
+              <td>{distance ? distance["ftoG"] : 0}</td>
             </tr>
           </table>
-          <h3>Let find the minimum connectors starting from city 8</h3>
+          <h3>Let find the minimum connectors starting from city A</h3>
+          <Typography>Eg:- AB 3</Typography>
           <Box>
-            <DynamicTextFields getValue={(val) => console.log(val)} />
+            <DynamicTextFields onCh getValue={(val) => {
+              console.log("val >>>>>>>", val);
+            }} 
+            />
           </Box>
         </Box>
       </Box>
@@ -128,13 +160,7 @@ const MinimumConnecters = () => {
         <button
           className="btn"
           style={{ marginTop: "24px", marginRight: "12px" }}
-          onClick={() => {
-            Swal.fire({
-              title: "Submit",
-              text: "Successfully submitted",
-              icon: "success",
-            });
-          }}
+          onClick={handleSubmit}
         >
           Submit
         </button>
@@ -153,6 +179,7 @@ const MinimumConnecters = () => {
         </button>
       </Box>
     </Sidebar>
+    </>
   );
 };
 

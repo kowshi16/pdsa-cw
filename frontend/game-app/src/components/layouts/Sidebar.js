@@ -76,7 +76,10 @@ const Sidebar = ({ children }) => {
             </ListItem>
           ))}
           <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/")}>
+            <ListItemButton onClick={() => {
+                window.localStorage.clear();
+                navigate("/")
+            }}>
               <ListItemTextStyled>Logout</ListItemTextStyled>
             </ListItemButton>
           </ListItem>

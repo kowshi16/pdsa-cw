@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pdsa.gameapp.dto.MinimumConnector.MinimumConnectorDto;
+import com.pdsa.gameapp.dto.MinimumConnector.MinimumConnectorRequest;
 
 @RestController
 @CrossOrigin
@@ -50,11 +52,13 @@ public class MinimumConnectorController {
 	}
 	
 	@PostMapping("/find/minimum-connector")
-	public ResponseEntity findMinimumConnector() {
+	public ResponseEntity findMinimumConnector(@RequestBody MinimumConnectorRequest minimumConnectorRequest) {
 		try {
-			int V = 5;
-			int[][] G = { { 0, 9, 75, 0, 0 }, { 9, 0, 95, 19, 42 }, { 75, 95, 0, 51, 66 }, { 0, 19, 51, 0, 31 },
-			        { 0, 42, 66, 31, 0 } };
+			int V = 8;
+//			int[][] G = { { 0, 9, 75, 0, 0 }, { 9, 0, 95, 19, 42 }, { 75, 95, 0, 51, 66 }, { 0, 19, 51, 0, 31 },
+//			        { 0, 42, 66, 31, 0 } };
+			
+			int[][] G = minimumConnectorRequest.getGraph();
 			
 			int INF = 9999999;
 			int no_edge;

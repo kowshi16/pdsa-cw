@@ -16,3 +16,20 @@ export const getDistances = async () => {
         console.log("Get random distances (error) ===>", error);
     });
 };
+
+export const findMinimumConnector = async (data) => {
+    return CustomAxios({
+        method: "POST",
+        baseURL: "http://localhost:9090",
+        url: "/minimum-connector/v1/find/minimum-connector",
+        headers: {},
+        data: data
+    })
+    .then((res) => {
+        console.log("Find Minimum Connector (res) ===>", res);
+        return res;
+    })
+    .catch((error) => {
+        console.log("Find Minimum Connector (error) ===>", error);
+    });
+};
