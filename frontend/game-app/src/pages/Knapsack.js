@@ -3,7 +3,11 @@ import Sidebar from "../components/layouts/Sidebar";
 import { Box, styled, Typography, Button } from "@mui/material";
 import Swal from "sweetalert2";
 import productDataStore from "../lib/productData";
-import { getWeights,getProfits, knapsackProblem } from "../components/api/knapsackAPI";
+import {
+  getWeights,
+  getProfits,
+  knapsackProblem,
+} from "../components/api/knapsackAPI";
 import Loading from "../components/core/Loading";
 
 const ProductCard = styled(Box)(({ theme }) => ({
@@ -27,7 +31,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 const TypographyStyled = styled(Typography)(({ theme }) => ({
   fontFamily: "'Open Sans', sans-serif",
   fontWeight: "600",
-  textTransform: "capitalize"
+  textTransform: "capitalize",
 }));
 
 const CardProductCard = styled(Box)(({ theme }) => ({
@@ -88,7 +92,7 @@ const ProductData = [
 const Knapsack = () => {
   const [products, setProducts] = React.useState(ProductData);
   const [cardProducts, setCardProducts] = React.useState([]);
-  const [isLoading, setisLoading] = React.useState(true);
+  const [isLoading, setisLoading] = React.useState(false);
   const [totalData, setTotalData] = React.useState({
     totalPrice: 0,
     totalWeight: 0,
@@ -97,46 +101,48 @@ const Knapsack = () => {
   const weightItem = [];
   let profitItem = [];
 
-  console.log("products >>>>>>",products);
+  console.log("products >>>>>>", products);
 
   useEffect(() => {
-   const getWeight = async( ) => {
-    let latestProductsData = [];
-    getWeights().then((res) => {
-      const weightData = res.data;
-        for(var i in weightData){
+    const getWeight = async () => {
+      let latestProductsData = [];
+      getWeights().then((res) => {
+        const weightData = res.data;
+        for (var i in weightData) {
           products.filter((data) => {
-            if(data.name === i) {
-                data.kg = weightData[i];
-                latestProductsData.push(data);
+            if (data.name === i) {
+              data.kg = weightData[i];
+              latestProductsData.push(data);
             }
-          })
+          });
         }
         setProducts(latestProductsData);
-    });
-   }
+      });
+    };
 
-   const getPrice = async() => {
-    let latestProductsData = [];
-    getProfits().then((res) => {
-      const weightData = res.data;
-        for(var i in weightData){
+    const getPrice = async () => {
+      let latestProductsData = [];
+      getProfits().then((res) => {
+        const weightData = res.data;
+        for (var i in weightData) {
           products.filter((data) => {
-            if(data.name === i) {
-                data.price = weightData[i];
-                latestProductsData.push(data);
+            if (data.name === i) {
+              data.price = weightData[i];
+              latestProductsData.push(data);
             }
-          })
+          });
         }
         setProducts(latestProductsData);
-        setisLoading(false);
-    });
-   }
+        // setisLoading(false);
+      });
+    };
 
-   getWeight();
-   getPrice();
+    setisLoading(true);
+    getWeight();
+    getPrice();
+    setisLoading(false);
 
-   return () => clearInterval(getWeight);
+    return () => clearInterval(getWeight);
   }, [isLoading]);
 
   const handleAddToCard = (id) => {
@@ -151,15 +157,15 @@ const Knapsack = () => {
       }
       return product.id === id;
     });
-    if(totalData.totalWeight + kg > 10){
+    if (totalData.totalWeight + kg > 10) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Maximum 10kgs!',
+        icon: "error",
+        title: "Oops...",
+        text: "Maximum 10kgs!",
       });
 
-      return ;
-  }
+      return;
+    }
     setCardProducts([...cardProducts, selectProduct[0]]);
 
     const latestPrice = totalData.totalPrice + price;
@@ -203,7 +209,7 @@ const Knapsack = () => {
     products.map((product) => {
       weightItem.push(product.kg);
       profitItem.push(product.price);
-     });
+    });
     console.log("weight items >>>>>>>>>", weightItem);
     console.log("profit items >>>>>>>>>", profitItem);
 
@@ -211,27 +217,24 @@ const Knapsack = () => {
       weightItems: weightItem,
       profitItems: profitItem,
       userTotalProfit: totalData.totalPrice,
-      name: playerName
+      name: playerName,
     };
     console.log("payload >>>>>>>>>", payload);
     knapsackProblem(payload)
       .then((res) => {
-        res.data === "Congratulations! Your answer is correct!" ? (
-          Swal.fire({
-            title: "Successful",
-            text: res.data,
-            icon: "success",
-          }).then(function () {
-            window.location.reload();
-          })
-        ) : (
-          Swal.fire({
-            title: "Incorrect",
-            text: res.data,
-            icon: "error",
-          })
-        )
-        console.log(res.data);
+        res.data === "Congratulations! Your answer is correct!"
+          ? Swal.fire({
+              title: "Successful",
+              text: res.data,
+              icon: "success",
+            }).then(function () {
+              window.location.reload();
+            })
+          : Swal.fire({
+              title: "Incorrect",
+              text: res.data,
+              icon: "error",
+            });
       })
       .catch((error) => {
         Swal.fire({
@@ -239,182 +242,181 @@ const Knapsack = () => {
           text: "Sorry an error occurred. Please try again.",
           icon: "warning",
         });
-        console.log(error);
-      });  
+      });
   };
- 
-  const handleReset = () => {
-      Swal.fire({
-        title: "Reset",
-        text: "Successfully reset",
-        icon: "success",
-      }).then(function () {
-        window.location.reload();
-      });
-      setCardProducts([]);
-      setProducts(productDataStore);
-      totalData({
-        totalPrice: 0,
-        totalWeight: 0,
-      });
-    };
-  
 
-  return (<>
-  <Loading status={isLoading} />
-    <Sidebar>
-      <h1>Maximum profit for 0/1 Knapsack Problem</h1>
-      <Box display="flex" flex-wrap>
-        <Box display="flex" flexDirection="column" width="560px">
-          {products.map((data) => {
-            return (
-              <ProductCard key={data.id}>
-                <img
-                  style={{ maxWidth: "120px" }}
-                  src={data.img}
-                  alt="grocery"
-                />
-                <Box minWidth="200px">
-                  <TypographyStyled>{data.name}</TypographyStyled>
-                  <TypographyStyled sx={{ margin: "14px 0px" }}>
-                    Rs. {data.price}.00
-                  </TypographyStyled>
-                  <TypographyStyled>{data.kg} Kg</TypographyStyled>
-                </Box>
-                <Box textAlign="center">
-                  {/* <ButtonStyled>+</ButtonStyled>
+  const handleReset = () => {
+    Swal.fire({
+      title: "Reset",
+      text: "Successfully reset",
+      icon: "success",
+    }).then(function () {
+      window.location.reload();
+    });
+    setCardProducts([]);
+    setProducts(productDataStore);
+    totalData({
+      totalPrice: 0,
+      totalWeight: 0,
+    });
+  };
+
+  return (
+    <>
+      <Loading status={isLoading} />
+      <Sidebar>
+        <h1>Maximum profit for 0/1 Knapsack Problem</h1>
+        <Box display="flex" flex-wrap>
+          <Box display="flex" flexDirection="column" width="560px">
+            {products.map((data) => {
+              return (
+                <ProductCard key={data.id}>
+                  <img
+                    style={{ maxWidth: "120px" }}
+                    src={data.img}
+                    alt="grocery"
+                  />
+                  <Box minWidth="200px">
+                    <TypographyStyled>{data.name}</TypographyStyled>
+                    <TypographyStyled sx={{ margin: "14px 0px" }}>
+                      Rs. {data.price}.00
+                    </TypographyStyled>
+                    <TypographyStyled>{data.kg} Kg</TypographyStyled>
+                  </Box>
+                  <Box textAlign="center">
+                    {/* <ButtonStyled>+</ButtonStyled>
                   <TypographyStyled sx={{ margin: "12px 0px" }}>
                     0
                   </TypographyStyled>
                   <ButtonStyled>-</ButtonStyled> */}
-                  {data.active && totalData.totalWeight < 10 && (
-                    <ButtonStyled onClick={() => handleAddToCard(data.id)}>
-                      Add to cart
-                    </ButtonStyled>
+                    {data.active && totalData.totalWeight < 10 && (
+                      <ButtonStyled onClick={() => handleAddToCard(data.id)}>
+                        Add to cart
+                      </ButtonStyled>
+                    )}
+                  </Box>
+                </ProductCard>
+              );
+            })}
+          </Box>
+          <Box ml="18px" mr="18px">
+            <ProductCard>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                width="100%"
+              >
+                <Typography
+                  sx={{ fontWeight: "600", textAlign: "center", width: "100%" }}
+                  variant="h4"
+                  mb="14px"
+                >
+                  Card
+                </Typography>
+                <Box>
+                  {cardProducts.length >= 1 && (
+                    <>
+                      <p
+                        style={{
+                          textAlign: "center",
+                          fontSize: "14px",
+                          margin: 0,
+                          marginBottom: "12px",
+                        }}
+                      >
+                        Maximum 10Kg
+                      </p>
+                      <Typography
+                        mb="16px"
+                        sx={{
+                          fontSize: "24px",
+                          width: "100%",
+                          textAlign: "center",
+                        }}
+                      >
+                        Total Price: <b>Rs {totalData.totalPrice}.00</b>
+                      </Typography>
+                      <Typography
+                        mb="16px"
+                        sx={{
+                          fontSize: "24px",
+                          width: "100%",
+                          textAlign: "center",
+                        }}
+                      >
+                        Total Weight: <b>{totalData.totalWeight} Kg</b>
+                      </Typography>
+                    </>
+                  )}
+                  {cardProducts.length >= 1 ? (
+                    cardProducts.map((data) => {
+                      return (
+                        <CardProductCard key={data.id}>
+                          <img
+                            style={{ maxWidth: "80px" }}
+                            src={data.img}
+                            alt="grocery"
+                          />
+                          <Box minWidth="200px">
+                            <TypographyStyled>{data.name}</TypographyStyled>
+                            <TypographyStyled sx={{ margin: "4px 0px" }}>
+                              Rs. {data.price}.00
+                            </TypographyStyled>
+                            <TypographyStyled>{data.kg} Kg</TypographyStyled>
+                          </Box>
+                          <Box textAlign="center">
+                            {!data.active && (
+                              <ButtonStyled
+                                onClick={() => handleRemoveProductCard(data.id)}
+                              >
+                                remove
+                              </ButtonStyled>
+                            )}
+                          </Box>
+                        </CardProductCard>
+                      );
+                    })
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontSize: "24px",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
+                      No products
+                    </Typography>
+                  )}
+                  {cardProducts.length >= 1 && (
+                    <Box width="100%" textAlign="center">
+                      <button
+                        className="btn"
+                        style={{
+                          marginTop: "24px",
+                          minWidth: "140px",
+                        }}
+                        onClick={handleSubmit}
+                      >
+                        Submit
+                      </button>
+                      <br />
+                      <button
+                        className="btn"
+                        style={{ marginTop: "24px", minWidth: "140px" }}
+                        onClick={handleReset}
+                      >
+                        reset
+                      </button>
+                    </Box>
                   )}
                 </Box>
-              </ProductCard>
-            );
-          })}
-        </Box>
-        <Box ml="18px" mr="18px">
-          <ProductCard>
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-            >
-              <Typography
-                sx={{ fontWeight: "600", textAlign: "center", width: "100%" }}
-                variant="h4"
-                mb="14px"
-              >
-                Card
-              </Typography>
-              <Box>
-                {cardProducts.length >= 1 && (
-                  <>
-                    <p
-                      style={{
-                        textAlign: "center",
-                        fontSize: "14px",
-                        margin: 0,
-                        marginBottom: "12px",
-                      }}
-                    >
-                      Maximum 10Kg
-                    </p>
-                    <Typography
-                      mb="16px"
-                      sx={{
-                        fontSize: "24px",
-                        width: "100%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Total Price: <b>Rs {totalData.totalPrice}.00</b>
-                    </Typography>
-                    <Typography
-                      mb="16px"
-                      sx={{
-                        fontSize: "24px",
-                        width: "100%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Total Weight: <b>{totalData.totalWeight} Kg</b>
-                    </Typography>
-                  </>
-                )}
-                {cardProducts.length >= 1 ? (
-                  cardProducts.map((data) => {
-                    return (
-                      <CardProductCard key={data.id}>
-                        <img
-                          style={{ maxWidth: "80px" }}
-                          src={data.img}
-                          alt="grocery"
-                        />
-                        <Box minWidth="200px">
-                          <TypographyStyled>{data.name}</TypographyStyled>
-                          <TypographyStyled sx={{ margin: "4px 0px" }}>
-                            Rs. {data.price}.00
-                          </TypographyStyled>
-                          <TypographyStyled>{data.kg} Kg</TypographyStyled>
-                        </Box>
-                        <Box textAlign="center">
-                          {!data.active && (
-                            <ButtonStyled
-                              onClick={() => handleRemoveProductCard(data.id)}
-                            >
-                              remove
-                            </ButtonStyled>
-                          )}
-                        </Box>
-                      </CardProductCard>
-                    );
-                  })
-                ) : (
-                  <Typography
-                    sx={{
-                      fontSize: "24px",
-                      width: "100%",
-                      textAlign: "center",
-                    }}
-                  >
-                    No products
-                  </Typography>
-                )}
-                {cardProducts.length >= 1 && (
-                  <Box width="100%" textAlign="center">
-                    <button
-                      className="btn"
-                      style={{
-                        marginTop: "24px",
-                        minWidth: "140px",
-                      }}
-                      onClick={handleSubmit}
-                    >
-                      Submit
-                    </button>
-                    <br />
-                    <button
-                      className="btn"
-                      style={{ marginTop: "24px", minWidth: "140px" }}
-                      onClick={handleReset}
-                    >
-                      reset
-                    </button>
-                  </Box>
-                )}
               </Box>
-            </Box>
-          </ProductCard>
+            </ProductCard>
+          </Box>
         </Box>
-      </Box>
-    </Sidebar>
+      </Sidebar>
     </>
   );
 };
