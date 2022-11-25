@@ -1,8 +1,8 @@
 import React from "react";
 import { get } from "lodash";
 import * as Yup from "yup";
-import { Formik, Field, FieldArray, ErrorMessage } from "formik";
-import { Box, Typography, styled } from "@mui/material";
+import { Formik, FieldArray } from "formik";
+import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 const DynamicTextFields = ({ getValue }) => {
@@ -59,7 +59,7 @@ const DynamicTextFields = ({ getValue }) => {
                       >
                         <button
                           className="btn"
-                          onClick={() => arrayHelpers.insert(index, "")}
+                          onClick={() => arrayHelpers.insert(index + 1, "")}
                           style={{ marginRight: "12px" }}
                         >
                           +
