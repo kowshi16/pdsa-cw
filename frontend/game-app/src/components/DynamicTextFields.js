@@ -5,7 +5,7 @@ import { Formik, FieldArray } from "formik";
 import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
-const DynamicTextFields = ({ getValue }) => {
+const DynamicTextFields = ({ getValue, isReset = false }) => {
   return (
     <Formik
       initialValues={{
@@ -46,9 +46,9 @@ const DynamicTextFields = ({ getValue }) => {
                         onBlur={(e) => {
                           setFieldValue(`dataValues[${index}]`, e.target.value);
                         }}
-                        onChange={(e) =>
-                          setFieldValue(`dataValues[${index}]`, e.target.value)
-                        }
+                        onChange={(e) => {
+                          setFieldValue(`dataValues[${index}]`, e.target.value);
+                        }}
                       />
 
                       <Box
@@ -85,9 +85,14 @@ const DynamicTextFields = ({ getValue }) => {
               </div>
             )}
           />
-          {/* <button style={{ marginTop: "12px" }} className="btn" type="submit">
-            Submit
-          </button> */}
+          <button
+            className="btn"
+            style={{ marginTop: "12px" }}
+            type="reset"
+            onClick={() => setFieldValue("dataValues", [])}
+          >
+            Reset
+          </button>
         </form>
       )}
     </Formik>

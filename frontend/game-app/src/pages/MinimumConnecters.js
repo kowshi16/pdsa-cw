@@ -21,6 +21,7 @@ const BoxWindow = styled(Box)(({ theme }) => ({
 const MinimumConnecters = () => {
   const [distance, setDistance] = React.useState(null);
   const [isLoading, setisLoading] = React.useState(true);
+  const [isReset, setIsReset] = React.useState(false);
   let edgeWeightItems = [];
 
   useEffect(() => {
@@ -30,19 +31,75 @@ const MinimumConnecters = () => {
       });
 
       setisLoading(false);
-    }
-    
+    };
+
     getDistance();
   }, []);
 
   const graphItems = [
-    [0, distance ? distance["atoB"] : 0, distance ? distance["atoD"] : 0, 0, distance ? distance["atoE"] : 0, 0, 0],
-    [distance ? distance["atoB"] : 0, distance ? distance["btoC"] : 0, 0, 0, 0, 0, 0],
-    [0, distance ? distance["btoC"] : 0, 0, 0, 0, 0, distance ? distance["ctoG"] : 0],
-    [distance ? distance["atoD"] : 0, 0, 0, 0, 0, distance ? distance["dtoF"] : 0, 0],
-    [distance ? distance["atoE"] : 0, 0, 0, 0, 0, 0, distance ? distance["etoG"] : 0],
-    [0, 0, 0, distance ? distance["dtoF"] : 0, 0, 0, distance ? distance["ftoG"] : 0],
-    [0, 0, distance ? distance["ctoG"] : 0, 0, distance ? distance["etoG"] : 0, distance ? distance["ftoG"] : 0, 0],
+    [
+      0,
+      distance ? distance["atoB"] : 0,
+      distance ? distance["atoD"] : 0,
+      0,
+      distance ? distance["atoE"] : 0,
+      0,
+      0,
+    ],
+    [
+      distance ? distance["atoB"] : 0,
+      distance ? distance["btoC"] : 0,
+      0,
+      0,
+      0,
+      0,
+      0,
+    ],
+    [
+      0,
+      distance ? distance["btoC"] : 0,
+      0,
+      0,
+      0,
+      0,
+      distance ? distance["ctoG"] : 0,
+    ],
+    [
+      distance ? distance["atoD"] : 0,
+      0,
+      0,
+      0,
+      0,
+      distance ? distance["dtoF"] : 0,
+      0,
+    ],
+    [
+      distance ? distance["atoE"] : 0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      distance ? distance["etoG"] : 0,
+    ],
+    [
+      0,
+      0,
+      0,
+      distance ? distance["dtoF"] : 0,
+      0,
+      0,
+      distance ? distance["ftoG"] : 0,
+    ],
+    [
+      0,
+      0,
+      distance ? distance["ctoG"] : 0,
+      0,
+      distance ? distance["etoG"] : 0,
+      distance ? distance["ftoG"] : 0,
+      0,
+    ],
   ];
 
   console.log("distance >>>>>>>", distance);
@@ -56,129 +113,91 @@ const MinimumConnecters = () => {
     // }
   };
 
-  return (<>
-  <Loading status={isLoading} />
-    <Sidebar>
-      <h1 style={{ textTransform: "uppercase" }}>
-        Identify minimum connecters
-      </h1>
-      <Box display="flex">
-        <BoxWindow>
-          <img src={MinimumConnectorImg} alt="" style={{ width: "100%" }} />
-        </BoxWindow>
-        <Box ml="36px" mt="48px">
-          <table className="table_minium">
-            <tr>
-              <th>From City</th>
-              <th>To City</th>
-              <th>Distance</th>
-            </tr>
-            <tr>
-              <td>
-                A
-              </td>
-              <td>
-                B
-              </td>
-              <td>{distance ? distance["atoB"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                A
-              </td>
-              <td>
-                D
-              </td>
-              <td>{distance ? distance["atoD"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                A
-              </td>
-              <td>
-                E
-              </td>
-              <td>{distance ? distance["atoE"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                B
-              </td>
-              <td>
-                C
-              </td>
-              <td>{distance ? distance["btoC"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                C
-              </td>
-              <td>
-                G
-              </td>
-              <td>{distance ? distance["ctoG"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                D
-              </td>
-              <td>
-                F
-              </td>
-              <td>{distance ? distance["dtoF"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                E
-              </td>
-              <td>
-                G
-              </td>
-              <td>{distance ? distance["etoG"] : 0}</td>
-            </tr>
-            <tr>
-              <td>
-                F
-              </td>
-              <td>
-                G
-              </td>
-              <td>{distance ? distance["ftoG"] : 0}</td>
-            </tr>
-          </table>
-          <h3>Let find the minimum connectors starting from city A</h3>
-          <Typography>Eg:- AB 3</Typography>
-          <Box>
-            <DynamicTextFields onCh getValue={(val) => {
-              console.log("val >>>>>>>", val);
-            }} 
-            />
+  const handleReset = () => {
+    setIsReset(true);
+  };
+
+  return (
+    <>
+      <Loading status={isLoading} />
+      <Sidebar>
+        <h1 style={{ textTransform: "uppercase" }}>
+          Identify minimum connecters
+        </h1>
+        <Box display="flex">
+          <BoxWindow>
+            <img src={MinimumConnectorImg} alt="" style={{ width: "100%" }} />
+          </BoxWindow>
+          <Box ml="36px" mt="48px">
+            <table className="table_minium">
+              <tr>
+                <th>From City</th>
+                <th>To City</th>
+                <th>Distance</th>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td>B</td>
+                <td>{distance ? distance["atoB"] : 0}</td>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td>D</td>
+                <td>{distance ? distance["atoD"] : 0}</td>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td>E</td>
+                <td>{distance ? distance["atoE"] : 0}</td>
+              </tr>
+              <tr>
+                <td>B</td>
+                <td>C</td>
+                <td>{distance ? distance["btoC"] : 0}</td>
+              </tr>
+              <tr>
+                <td>C</td>
+                <td>G</td>
+                <td>{distance ? distance["ctoG"] : 0}</td>
+              </tr>
+              <tr>
+                <td>D</td>
+                <td>F</td>
+                <td>{distance ? distance["dtoF"] : 0}</td>
+              </tr>
+              <tr>
+                <td>E</td>
+                <td>G</td>
+                <td>{distance ? distance["etoG"] : 0}</td>
+              </tr>
+              <tr>
+                <td>F</td>
+                <td>G</td>
+                <td>{distance ? distance["ftoG"] : 0}</td>
+              </tr>
+            </table>
+            <h3>Let find the minimum connectors starting from city A</h3>
+            <Typography>Eg:- AB 3</Typography>
+            <Box>
+              <DynamicTextFields
+                isReset={isReset}
+                getValue={(val) => {
+                  console.log("val >>>>>>>", val);
+                }}
+              />
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box>
-        <button
-          className="btn"
-          style={{ marginTop: "24px", marginRight: "12px" }}
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
-        <button
-          className="btn"
-          style={{ marginTop: "24px" }}
-          onClick={() => {
-            Swal.fire({
-              title: "Reset",
-              text: "Successfully reset",
-              icon: "success",
-            });
-          }}
-        >
-          reset
-        </button>
-      </Box>
-    </Sidebar>
+        <Box>
+          <button
+            className="btn"
+            style={{ marginTop: "24px", marginRight: "12px" }}
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </Box>
+      </Sidebar>
     </>
   );
 };

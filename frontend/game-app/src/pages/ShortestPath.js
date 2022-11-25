@@ -18,18 +18,34 @@ const BoxWindow = styled(Box)(({ theme }) => ({
 
 const ShortestPath = () => {
   const [distance, setDistance] = React.useState(null);
+  const [enteredDistances, setEnteredDistances] = React.useState("");
 
   useEffect(() => {
     const getDistance = async () => {
       getDistances().then((res) => {
         setDistance(res.data);
       });
-    }
-    
+    };
+
     getDistance();
   }, []);
 
   console.log("distance >>>>>>>", distance);
+
+  const handleSubmit = () => {
+    // Submit button click
+    console.log(enteredDistances);
+
+    Swal.fire({
+      title: "Submit",
+      text: "Successfully submitted",
+      icon: "success",
+    });
+  };
+
+  const handleChange = (e) => {
+    setEnteredDistances(e.target.value);
+  };
 
   return (
     <Sidebar>
@@ -46,92 +62,44 @@ const ShortestPath = () => {
               <th>Distance</th>
             </tr>
             <tr>
-              <td>
-                0
-              </td>
-              <td>
-                1
-              </td>
-              <td>
-              {distance ? distance["zeroToOne"] : 0}
-              </td>
+              <td>0</td>
+              <td>1</td>
+              <td>{distance ? distance["zeroToOne"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                1
-              </td>
-              <td>
-                2
-              </td>
-              <td>
-                {distance ? distance["oneToTwo"] : 0}
-              </td>
+              <td>1</td>
+              <td>2</td>
+              <td>{distance ? distance["oneToTwo"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                2
-              </td>
-              <td>
-                3
-              </td>
-              <td>
-                {distance ? distance["twoToThree"] : 0}
-              </td>
+              <td>2</td>
+              <td>3</td>
+              <td>{distance ? distance["twoToThree"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                3
-              </td>
-              <td>
-                4
-              </td>
-              <td>
-                {distance ? distance["threeToFour"] : 0}
-              </td>
+              <td>3</td>
+              <td>4</td>
+              <td>{distance ? distance["threeToFour"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                3
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                {distance ? distance["threeToFive"] : 0}
-              </td>
+              <td>3</td>
+              <td>5</td>
+              <td>{distance ? distance["threeToFive"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                4
-              </td>
-              <td>
-                6
-              </td>
-              <td>
-                {distance ? distance["fourToSix"] : 0}
-              </td>
+              <td>4</td>
+              <td>6</td>
+              <td>{distance ? distance["fourToSix"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                5
-              </td>
-              <td>
-                6
-              </td>
-              <td>
-                {distance ? distance["fiveToSix"] : 0}
-              </td>
+              <td>5</td>
+              <td>6</td>
+              <td>{distance ? distance["fiveToSix"] : 0}</td>
             </tr>
             <tr>
-              <td>
-                6
-              </td>
-              <td>
-                0
-              </td>
-              <td>
-                {distance ? distance["sixToZero"] : 0}
-              </td>
+              <td>6</td>
+              <td>0</td>
+              <td>{distance ? distance["sixToZero"] : 0}</td>
             </tr>
           </table>
           <h3>Predict shortest distance from city 0 to city 6</h3>
@@ -142,9 +110,20 @@ const ShortestPath = () => {
               variant="outlined"
               placeholder="0,0,0,0,0"
               sx={{ margin: "0px 22px" }}
+              onChange={handleChange}
+              value={enteredDistances}
             />
             <Typography>6</Typography>
           </Box>
+          <button
+            className="btn"
+            style={{ marginTop: "12px" }}
+            type="reset"
+            value={enteredDistances}
+            onClick={() => setEnteredDistances("")}
+          >
+            Reset
+          </button>
         </Box>
       </Box>
       <Box>
@@ -152,28 +131,9 @@ const ShortestPath = () => {
           <button
             className="btn"
             style={{ marginTop: "24px", marginRight: "12px" }}
-            onClick={() => {
-              Swal.fire({
-                title: "Submit",
-                text: "Successfully submitted",
-                icon: "success",
-              });
-            }}
+            onClick={handleSubmit}
           >
             Submit
-          </button>
-          <button
-            className="btn"
-            style={{ marginTop: "24px" }}
-            onClick={() => {
-              Swal.fire({
-                title: "Reset",
-                text: "Successfully reset",
-                icon: "success",
-              });
-            }}
-          >
-            Reset
           </button>
         </Box>
       </Box>
