@@ -15,6 +15,10 @@ public class MaximumProfitDto {
 	private int rice;
 	private int fruits;
 	
+	public MaximumProfitDto () {
+		
+	}
+	
 	public int getSugar() {
 		return sugar;
 	}

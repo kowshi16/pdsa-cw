@@ -15,6 +15,10 @@ public class ShortestPathDto {
 	private int FiveToSix;
 	private int SixToZero;
 	
+	public ShortestPathDto () {
+		
+	}
+	
 	public int getZeroToOne() {
 		return ZeroToOne;
 	}

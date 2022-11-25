@@ -15,6 +15,10 @@ public class MinimumConnectorDto {
 	private int EtoG;
 	private int FtoG;
 	
+	public MinimumConnectorDto () {
+		
+	}
+	
 	public int getAtoB() {
 		return AtoB;
 	}
