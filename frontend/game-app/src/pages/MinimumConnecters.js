@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import DynamicTextFields from "../components/DynamicTextFields";
 import Swal from "sweetalert2";
 import MinimumConnectorImg from "../assets/img/minimum-connector.jpg";
-import { getDistances } from "../components/api/minimumConnectorAPI";
+import { findMinimumConnector, getDistances } from "../components/api/minimumConnectorAPI";
 import Loading from "../components/core/Loading";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
@@ -106,8 +106,34 @@ const MinimumConnecters = () => {
 
   console.log("graph >>>>", graphItems);
 
-  const handleSubmit = (val) => {
-    console.log("val >>>>>>>", val);
+  const handleSubmit = () => {
+    const payload = {
+      graph: graphItems
+    };
+    console.log("payload >>>>>>", payload);
+    findMinimumConnector(payload)
+    .then((res) => {
+      res.data === "Congratulations! Your answer is correct!"
+        ? Swal.fire({
+            title: "Successful",
+            text: res.data,
+            icon: "success",
+          }).then(function () {
+            window.location.reload();
+          })
+        : Swal.fire({
+            title: "Incorrect",
+            text: res.data,
+            icon: "error",
+          });
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Something went wrong",
+        text: "Sorry an error occurred. Please try again.",
+        icon: "warning",
+      });
+    });
   };
 
   return (

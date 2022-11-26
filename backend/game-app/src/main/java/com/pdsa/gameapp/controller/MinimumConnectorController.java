@@ -54,7 +54,7 @@ public class MinimumConnectorController {
 	@PostMapping("/find/minimum-connector")
 	public ResponseEntity findMinimumConnector(@RequestBody MinimumConnectorRequest minimumConnectorRequest) {
 		try {
-			int V = 8;
+			int V = 7;
 //			int[][] G = { { 0, 9, 75, 0, 0 }, { 9, 0, 95, 19, 42 }, { 75, 95, 0, 51, 66 }, { 0, 19, 51, 0, 31 },
 //			        { 0, 42, 66, 31, 0 } };
 			
@@ -90,7 +90,7 @@ public class MinimumConnectorController {
 				selected[y] = true;
 				no_edge++;
 			}
-			return null;
+			return ResponseEntity.ok().body("Congratulations! Your answer is correct!");
 		}
 		
 		catch(Exception ex) {

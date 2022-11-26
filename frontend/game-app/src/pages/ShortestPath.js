@@ -4,7 +4,7 @@ import { Box, Typography, styled } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import ShortestPathImg from "../assets/img/shortest-path.png";
 import Swal from "sweetalert2";
-import { getDistances } from "../components/api/shortestPathAPI";
+import { findShortestPath, getDistances } from "../components/api/shortestPathAPI";
 
 const BoxWindow = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -32,14 +32,102 @@ const ShortestPath = () => {
 
   console.log("distance >>>>>>>", distance);
 
+  const graphItems = [
+    [
+      0,
+      distance ? distance["zeroToOne"] : 0,
+      0,
+      0,
+      0,
+      0,
+      distance ? distance["sixToZero"] : 0,
+    ],
+    [
+      distance ? distance["zeroToOne"] : 0,
+      0,
+      distance ? distance["oneToTwo"] : 0,
+      0,
+      0,
+      0,
+      0,
+    ],
+    [
+      0,
+      distance ? distance["oneToTwo"] : 0,
+      0,
+      distance ? distance["twoToThree"] : 0,
+      0,
+      0,
+      0,
+    ],
+    [
+      0,
+      0,
+      distance ? distance["oneToTwo"] : 0,
+      0,
+      distance ? distance["threeToFour"] : 0,
+      distance ? distance["threeToFive"] : 0,
+      0,
+    ],
+    [
+      0,
+      0,
+      0,
+      distance ? distance["threeToFour"] : 0,
+      0,
+      0,
+      distance ? distance["fourToSix"] : 0,
+    ],
+    [
+      0,
+      0,
+      0,
+      distance ? distance["threeToFive"] : 0,
+      0,
+      0,
+      distance ? distance["fiveToSix"] : 0,
+    ],
+    [
+      distance ? distance["sixToZero"] : 0,
+      0,
+      0,
+      0,
+      distance ? distance["fourToSix"] : 0,
+      distance ? distance["fiveToSix"] : 0,
+      0,
+    ],
+  ];
+
   const handleSubmit = () => {
     // Submit button click
     console.log(enteredDistances);
 
-    Swal.fire({
-      title: "Submit",
-      text: "Successfully submitted",
-      icon: "success",
+    const payload = {
+      graph: graphItems
+    };
+    console.log("payload >>>>>>", payload);
+    findShortestPath(payload)
+    .then((res) => {
+      res.data === "Congratulations! Your answer is correct!"
+        ? Swal.fire({
+            title: "Successful",
+            text: res.data,
+            icon: "success",
+          }).then(function () {
+            window.location.reload();
+          })
+        : Swal.fire({
+            title: "Incorrect",
+            text: res.data,
+            icon: "error",
+          });
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Something went wrong",
+        text: "Sorry an error occurred. Please try again.",
+        icon: "warning",
+      });
     });
   };
 

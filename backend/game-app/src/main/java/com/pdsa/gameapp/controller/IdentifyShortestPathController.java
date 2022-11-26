@@ -110,36 +110,30 @@ public class IdentifyShortestPathController {
 				System.out.print("\n" + startVertex + " -> ");
 				System.out.print(vertexIndex + " \t\t ");
 				System.out.print(distances[vertexIndex] + "\t\t");
-				//printPath(vertexIndex, parents);
+				printPath(vertexIndex, parents);
 			}
 		}
 	}
 
-//	private static void printPath(int currentVertex,
-//            int[] parents) {
-//
-//if (currentVertex == NO_PARENT) {
-//return;
-//}
-//printPath(parents[currentVertex], parents);
-//System.out.print(currentVertex + " ");
-//}
+	private static void printPath(int currentVertex, int[] parents) {
 
-	@PostMapping("/find/minimum-connector")
+		if (currentVertex == NO_PARENT) {
+			return;
+		}
+		printPath(parents[currentVertex], parents);
+		System.out.print(currentVertex + " ");
+	}
+
+	@PostMapping("/find/shortest-path")
 	public ResponseEntity findMinimumConnector(@RequestBody ShortestPathRequest shortestPathRequest) {
 		try {
-//			int[][] adjacencyMatrix = {{0, 4, 0, 0, 0, 0, 0, 8, 0},
-//	                {4, 0, 8, 0, 0, 0, 0, 11, 0},
-//	                {0, 8, 0, 7, 0, 4, 0, 0, 2},
-//	                {0, 0, 7, 0, 9, 14, 0, 0, 0},
-//	                {0, 0, 0, 9, 0, 10, 0, 0, 0},
-//	                {0, 0, 4, 0, 10, 0, 2, 0, 0},
-//	                {0, 0, 0, 14, 0, 2, 0, 1, 6},
-//	                {8, 11, 0, 0, 0, 0, 1, 0, 7},
-//	                {0, 0, 2, 0, 0, 0, 6, 7, 0}};
+//			int[][] adjacencyMatrix = { { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+//					{ 0, 8, 0, 7, 0, 4, 0, 0, 2 }, { 0, 0, 7, 0, 9, 14, 0, 0, 0 }, { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+//					{ 0, 0, 4, 0, 10, 0, 2, 0, 0 }, { 0, 0, 0, 14, 0, 2, 0, 1, 6 }, { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+//					{ 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
 			int[][] adjacencyMatrix = shortestPathRequest.getGraph();
 			dijkstra(adjacencyMatrix, 0);
-			return null;
+			return ResponseEntity.ok().body("Congratulations! Your answer is correct!");
 		}
 
 		catch (Exception ex) {

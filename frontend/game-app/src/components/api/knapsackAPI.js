@@ -3,7 +3,7 @@ import CustomAxios from "./customAxios";
 export const getWeights = async () => {
   return CustomAxios({
     method: "GET",
-    baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:9090",
     url: "/maximum-profit/v1/get/weights",
     headers: {},
     params: {},
@@ -20,7 +20,7 @@ export const getWeights = async () => {
 export const getProfits = async () => {
   return CustomAxios({
     method: "GET",
-    baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:9090",
     url: "/maximum-profit/v1/get/profit",
     headers: {},
     params: {},
@@ -37,7 +37,7 @@ export const getProfits = async () => {
 export const knapsackProblem = async (data) => {
   return CustomAxios({
     method: "POST",
-    baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:9090",
     url: "/maximum-profit/v1/knapsack",
     headers: {},
     data: data,
