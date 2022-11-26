@@ -106,15 +106,8 @@ const MinimumConnecters = () => {
 
   console.log("graph >>>>", graphItems);
 
-  const handleSubmit = () => {
-    // const payload = {
-    //   graph: graphItems,
-    //   edgeWeight
-    // }
-  };
-
-  const handleReset = () => {
-    setIsReset(true);
+  const handleSubmit = (val) => {
+    console.log("val >>>>>>>", val);
   };
 
   return (
@@ -179,23 +172,9 @@ const MinimumConnecters = () => {
             <h3>Let find the minimum connectors starting from city A</h3>
             <Typography>Eg:- AB 3</Typography>
             <Box>
-              <DynamicTextFields
-                isReset={isReset}
-                getValue={(val) => {
-                  console.log("val >>>>>>>", val);
-                }}
-              />
+              <DynamicTextFields isReset={isReset} getValue={handleSubmit} />
             </Box>
           </Box>
-        </Box>
-        <Box>
-          <button
-            className="btn"
-            style={{ marginTop: "24px", marginRight: "12px" }}
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
         </Box>
       </Sidebar>
     </>

@@ -6,13 +6,17 @@ import { Box } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 const DynamicTextFields = ({ getValue, isReset = false }) => {
+  const handleSubmit = (data) => {
+    getValue(data);
+  };
+
   return (
     <Formik
       initialValues={{
         dataValues: get("", "dataValues", []),
       }}
       validationSchema={Yup.object().shape({})}
-      onSubmit={getValue}
+      onSubmit={handleSubmit}
     >
       {({
         errors,
@@ -85,6 +89,9 @@ const DynamicTextFields = ({ getValue, isReset = false }) => {
               </div>
             )}
           />
+          <button className="btn" style={{ marginTop: "12px" }} type="submit">
+            Submit
+          </button>
           <button
             className="btn"
             style={{ marginTop: "12px" }}
